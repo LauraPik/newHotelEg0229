@@ -46,6 +46,9 @@ const userSchema = new mongoose.Schema({
     default: true,
     select: false,
   },
+  accetoken:{
+    
+  }
 });
 
 userSchema.pre("save", async function (next) {

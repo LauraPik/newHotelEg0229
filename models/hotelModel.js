@@ -1,4 +1,6 @@
 const mongoose = require("mongoose")
+const User = require("./userModel")
+
 
 const hotelSchema = new mongoose.Schema({
     name:{
@@ -43,12 +45,38 @@ const hotelSchema = new mongoose.Schema({
         type:String,
         required:[true, "musta have a image cover"]
     },
+    // paduoti, kas yra manager, nori, kad sudetu dokumentus// child ref
+    managers: [
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: "User"
+        }
+    ],
     createdAt:{
         type:Date,
         default:Date.now(),
         select:false
     },
-})
+},
+{
+    toJSON:{virtuals: true},
+    toObject:{virtuals: true}
+}
+)
+
+// // managers/ ascyn funkcija turi gauti id ir pagal ji grazinti duomenis, bet reikia gauti kelis id, pre-pries issaugojimu
+// hotelSchema.pre('save', async function(){
+//     const managersPromises = this.managers.map(async id=> User.findById(id));
+//     // as galiu paduoti kiek noriu promisu
+//     this.managers = await Promise.all(managersPromises)
+
+// })
+
+hotelSchema.virtual("reviews", {
+    ref: "Review",
+    foreignField: "hotel",
+    localField: "_id"
+});
 
 const Hotel = mongoose.model('Hotel', hotelSchema)
 

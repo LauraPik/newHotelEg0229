@@ -35,7 +35,12 @@ exports.signup = async (req, res) => {
   }
 };
 
+exports.logout = async(req, res)=>{
+  
+}
+
 exports.login = async (req, res) => {
+  
   try {
     const { email, password } = req.body;
     //1. check email and password exist
@@ -104,10 +109,10 @@ exports.protect = async (req, res, next) => {
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     if(!roles.includes(req.user.role)){
-      res.status(403).json({
+      return next(res.status(403).json({
         status: "Fail",
         message: "Your are not authorized to access ths data"
-      })
+      }))
     }
     next()
   }

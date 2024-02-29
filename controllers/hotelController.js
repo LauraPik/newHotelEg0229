@@ -1,4 +1,4 @@
-const fs = require('fs')
+const Review = require('../models/reviewModel')
 const Hotel = require('./../models/hotelModel')
 const APIFeatures = require('./../utils/apiTools')
 
@@ -21,6 +21,7 @@ exports.aliasTopHotels = (req, res, next) =>{
 }
 
 exports.getAllHotels = async (req, res)=>{
+    console.log(req.query) 
     try{
         const hotelsData = new APIFeatures(Hotel.find(), req.query)
         .filter()
@@ -59,7 +60,8 @@ exports.createHotel = async (req, res) =>{
 
 exports.getHotel = async (req, res)=>{
     try{
-        const hotel = await Hotel.findById(req.params.id)
+        // populate
+        const hotel = await Hotel.findById(req.params.id).populate("reviews")
         res.status(200).json({
             status: "success",
             data: {hotel}
@@ -106,3 +108,5 @@ exports.deleteHotel = async (req, res) =>{
         })
     }
 }
+
+
